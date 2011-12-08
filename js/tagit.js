@@ -127,7 +127,12 @@
             //setup autocomplete handler
             var os = this.options.select;
             this.options.appendTo = this.element;
-            this.options.source = this.options.tagSource;
+
+            //setting up a on the fly autocompletion
+            this.options.source = function (req, response) { 
+                var filtered = $.grep(self.options.tagSource, function(n) { return n.toLowerCase().indexOf(req.term.toLowerCase()) >= 0; });
+                var options = $.map(filtered, function (item) {return {label: item, value: item}; });
+                response( options); };
             this.options.select = function(event, ui) {
                 clearTimeout(self.timer);
                 if (ui.item.label === undefined)
@@ -285,6 +290,9 @@
                 this._addSelect(label, value);
             if (this.options.tagsChanged)
                 this.options.tagsChanged(label, 'added', tag);
+            
+            this.options.tagSource.push(label);
+
             return true;
         }
         ,
