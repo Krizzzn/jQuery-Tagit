@@ -379,7 +379,7 @@
 
         _lowerIfCaseInsensitive: function (inp) {
 
-            if (inp === undefined || typeof(inp) != typeof("a") )
+            if (inp === undefined || typeof(inp) != "string")
                 return inp;
 
             if (this.options.caseSensitive)
