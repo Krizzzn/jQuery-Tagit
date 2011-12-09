@@ -132,9 +132,7 @@
             this.options.source = function (req, response) { 
                 var filtered = $.grep(self.options.tagSource, function(n) { return n.toLowerCase().indexOf(req.term.toLowerCase()) >= 0; });
                 var theTags = self.tags();
-
                 filtered = $.grep(filtered, function(n) { return ($.inArray(n, theTags) >= 0);}, true);
-
                 var options = $.map(filtered, function (item) {return {label: item, value: item}; });
 
                 response( options); };
@@ -142,7 +140,7 @@
             this.options.select = function(event, ui) {
                 clearTimeout(self.timer);
                 //if (ui.item.label === undefined)
-                	self._addTag(ui.item.value);
+                    self._addTag(ui.item.value);
                 //else
                 //	self._addTag(ui.item.label, ui.item.value);
                 return false;
@@ -265,8 +263,9 @@
         ,
 
         _addTag: function(label, value) {
-            this.input.val("");
-            
+
+            label = label.replace(/,+$/, "");
+
             if (this._splitAt && label.search(this._splitAt) > 0){
                 var result = label.split(this._splitAt);
                 for (var i = 0; i < result.length; i++)
@@ -274,9 +273,8 @@
                 return;
             }
 
-            label = label.replace(/,+$/, "");
             label = label.trim();
-            
+
             if (label == "")
                 return false;
 
@@ -284,14 +282,14 @@
                 this._highlightExisting();
                 return false;
             }
-
             var tag = "";
             tag = $('<li class="tagit-choice"'
-            	+ (value !== undefined ? ' tagValue="' + value + '"' : '')
-            	+ '>' + label + '<a class="tagit-close">x</a></li>');
+                + (value !== undefined ? ' tagValue="' + value + '"' : '')
+                + '>' + label + '<a class="tagit-close">x</a></li>');
             tag.insertBefore(this.input.parent());
             this.input.val("");
             this.tagsArray.push(value === undefined ? label : {label: label, value: value});
+            
             if (this.options.select)
                 this._addSelect(label, value);
             if (this.options.tagsChanged)
@@ -442,31 +440,7 @@
         ,
         
         add: function(label, value) {
-            label = label.replace(/,+$/, "");
-
-            if (this._splitAt && label.search(this._splitAt) > 0){
-                var result = label.split(this._splitAt);
-                for (var i = 0; i < result.length; i++)
-                    this.add(result[i], value );
-                return;
-            }
-
-            label = label.trim();
-            if (label == "" || this._exists(label, value))
-                return false;
-
-            var tag = "";
-            tag = $('<li class="tagit-choice"'
-            	+ (value !== undefined ? ' tagValue="' + value + '"' : '')
-            	+ '>' + label + '<a class="tagit-close">x</a></li>');
-            tag.insertBefore(this.input.parent());
-            this.tagsArray.push(value === undefined ? label : {label: label, value: value});
-            if (this.options.select)
-                this._addSelect(label, value);
-            if (this.options.tagsChanged)
-                this.options.tagsChanged(label, 'added', tag);
-
-            return true;
+            return this._addTag(label, value);
         }
 
     });
