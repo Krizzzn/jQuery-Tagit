@@ -139,6 +139,9 @@
 
             this.options.select = function(event, ui) {
                 clearTimeout(self.timer);
+
+                // OBACHT: THIS MIGHT BE A BREAKING CHANGE - BUT IT WOULD REDUCE COMPLEXITY.
+
                 //if (ui.item.label === undefined)
                     self._addTag(ui.item.value);
                 //else
@@ -295,8 +298,7 @@
             if (this.options.tagsChanged)
                 this.options.tagsChanged(label, 'added', tag);
             
-            this.options.tagSource.push(label);
-
+            this.addToTagSource(label);
             return true;
         }
         ,
@@ -442,6 +444,12 @@
         add: function(label, value) {
             return this._addTag(label, value);
         }
+        ,   
 
+        addToTagSource: function(label){
+            if ($.inArray(label, this.options.tagSource) == -1)
+                this.options.tagSource.push(label);
+            return true;
+        }   
     });
 })(jQuery);

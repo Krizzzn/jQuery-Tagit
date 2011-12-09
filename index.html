@@ -50,6 +50,7 @@
             $('#demo4GetTags').click(function(){showTags($('#demo4').tagit('tags'))});
 
             function showTags(tags){
+                alert(tags)
                 var string = "Tags\r\n";
                     string +="--------\r\n";
                 for(var i in tags)
