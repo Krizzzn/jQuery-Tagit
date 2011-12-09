@@ -131,14 +131,20 @@
             //setting up a on the fly autocompletion
             this.options.source = function (req, response) { 
                 var filtered = $.grep(self.options.tagSource, function(n) { return n.toLowerCase().indexOf(req.term.toLowerCase()) >= 0; });
+                var theTags = self.tags();
+
+                filtered = $.grep(filtered, function(n) { return ($.inArray(n, theTags) >= 0);}, true);
+
                 var options = $.map(filtered, function (item) {return {label: item, value: item}; });
+
                 response( options); };
+
             this.options.select = function(event, ui) {
                 clearTimeout(self.timer);
-                if (ui.item.label === undefined)
+                //if (ui.item.label === undefined)
                 	self._addTag(ui.item.value);
-                else
-                	self._addTag(ui.item.label, ui.item.value);
+                //else
+                //	self._addTag(ui.item.label, ui.item.value);
                 return false;
             }
             var inputBox = this.input;
